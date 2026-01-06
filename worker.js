@@ -33,7 +33,7 @@ const UBIGEO_DATA = {
     { code: 'TUM', name: 'Tumbes' },
     { code: 'UCA', name: 'Ucayali' }
   ],
-  
+
   provincesByDepartment: {
     'AMA': ['Bagua', 'Bongara', 'Chachapoyas', 'Condorcanqui', 'Luya', 'Rodriguez De Mendoza', 'Utcubamba'],
     'ANC': ['Aija', 'Antonio Raymondi', 'Asuncion', 'Bolognesi', 'Carhuaz', 'Carlos Fermin Fitzcarrald', 'Casma', 'Corongo', 'Huaraz', 'Huari', 'Huarmey', 'Huaylas', 'Mariscal Luzuriaga', 'Ocros', 'Pallasca', 'Pomabamba', 'Recuay', 'Santa', 'Sihuas', 'Yungay'],
@@ -69,12 +69,12 @@ function parseRawData() {
   const rawData = {
     'AMA': ['Bagua / Bagua', 'Bagua / Aramango', 'Bagua / Copallin', 'Bagua / El Parco', 'Bagua / Imaza', 'Bagua / La Peca', 'Bongara / Jumbilla', 'Bongara / Chisquilla', 'Bongara / Churuja', 'Bongara / Corosha', 'Bongara / Cuispes', 'Bongara / Florida', 'Bongara / Jazan', 'Bongara / Recta', 'Bongara / San Carlos', 'Bongara / Shipasbamba', 'Bongara / Valera', 'Bongara / Yambrasbamba', 'Chachapoyas / Chachapoyas', 'Chachapoyas / Asuncion', 'Chachapoyas / Balsas', 'Chachapoyas / Cheto', 'Chachapoyas / Chiliquin', 'Chachapoyas / Chuquibamba', 'Chachapoyas / Granada', 'Chachapoyas / Huancas', 'Chachapoyas / La Jalca', 'Chachapoyas / Leimebamba', 'Chachapoyas / Levanto', 'Chachapoyas / Magdalena', 'Chachapoyas / Mariscal Castilla', 'Chachapoyas / Molinopampa', 'Chachapoyas / Montevideo', 'Chachapoyas / Olleros', 'Chachapoyas / Quinjalca', 'Chachapoyas / San Francisco De Daguas', 'Chachapoyas / San Isidro De Maino', 'Chachapoyas / Soloco', 'Chachapoyas / Sonche', 'Condorcanqui / Nieva', 'Condorcanqui / El Cenepa', 'Condorcanqui / Rio Santiago', 'Luya / Lamud', 'Luya / Camporredondo', 'Luya / Cocabamba', 'Luya / Colcamar', 'Luya / Conila', 'Luya / Inguilpata', 'Luya / Longuita', 'Luya / Lonya Chico', 'Luya / Luya', 'Luya / Luya Viejo', 'Luya / Maria', 'Luya / Ocalli', 'Luya / Ocumal', 'Luya / Pisuquia', 'Luya / Providencia', 'Luya / San Cristobal', 'Luya / San Francisco Del Yeso', 'Luya / San Jeronimo', 'Luya / San Juan De Lopecancha', 'Luya / Santa Catalina', 'Luya / Santo Tomas', 'Luya / Tingo', 'Luya / Trita', 'Rodriguez De Mendoza / San Nicolas', 'Rodriguez De Mendoza / Chirimoto', 'Rodriguez De Mendoza / Cochamal', 'Rodriguez De Mendoza / Huambo', 'Rodriguez De Mendoza / Limabamba', 'Rodriguez De Mendoza / Longar', 'Rodriguez De Mendoza / Mariscal Benavides', 'Rodriguez De Mendoza / Milpuc', 'Rodriguez De Mendoza / Omia', 'Rodriguez De Mendoza / Santa Rosa', 'Rodriguez De Mendoza / Totora', 'Rodriguez De Mendoza / Vista Alegre', 'Utcubamba / Bagua Grande', 'Utcubamba / Cajaruro', 'Utcubamba / Cumba', 'Utcubamba / El Milagro', 'Utcubamba / Jamalca', 'Utcubamba / Lonya Grande', 'Utcubamba / Yamon']
   };
-  
+
   const districts = {};
-  
+
   for (const [deptCode, entries] of Object.entries(rawData)) {
     districts[deptCode] = {};
-    
+
     for (const entry of entries) {
       const [province, district] = entry.split(' / ');
       if (!districts[deptCode][province]) {
@@ -84,13 +84,13 @@ function parseRawData() {
         districts[deptCode][province].push(district);
       }
     }
-    
+
     // Sort districts alphabetically
     for (const province in districts[deptCode]) {
       districts[deptCode][province].sort();
     }
   }
-  
+
   return districts;
 }
 
@@ -132,88 +132,118 @@ function errorResponse(code, message, status = 400) {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    
+
     // Handle OPTIONS preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: CORS_HEADERS });
     }
-    
+
     // Only allow GET requests
     if (request.method !== 'GET') {
       return errorResponse('METHOD_NOT_ALLOWED', 'Only GET requests are allowed', 405);
     }
-    
+
     // Check cache first
     const cache = caches.default;
     let response = await cache.match(request);
     if (response) {
       return response;
     }
-    
+
     // Route handling
     const path = url.pathname;
-    
+
+    // GET / (root)
+    if (path === '/') {
+      response = jsonResponse({
+        ok: true,
+        service: 'UBIGEO Perú API',
+        version: 'v1',
+        endpoints: [
+          '/health',
+          '/api/v1/pe/departments',
+          '/api/v1/pe/provinces?department=CAJ',
+          '/api/v1/pe/districts?department=CAJ&province=Cutervo',
+          '/api/v1/pe/search?q=bagua'
+        ]
+      });
+    }
+
+    // GET /health
+    else if (path === '/health') {
+      response = jsonResponse({
+        ok: true,
+        status: 'healthy'
+      });
+    }
+
+    // GET /api/v1/pe/departments
+    else if (path === '/api/v1/pe/departments') {
+      response = successResponse(UBIGEO_DATA.departments);
+    }
+
+
     // GET /api/v1/pe/departments
     if (path === '/api/v1/pe/departments') {
       response = successResponse(UBIGEO_DATA.departments);
     }
-    
+
     // GET /api/v1/pe/provinces?department=CODE
     else if (path === '/api/v1/pe/provinces') {
       const department = url.searchParams.get('department');
-      
+
       if (!department) {
         return errorResponse('MISSING_PARAMETER', "Parameter 'department' is required");
       }
-      
+
       const provinces = UBIGEO_DATA.provincesByDepartment[department.toUpperCase()];
-      
+
       if (!provinces) {
         return errorResponse('INVALID_DEPARTMENT', `Department '${department}' not found`, 404);
       }
-      
+
       response = successResponse(provinces);
     }
-    
+
     // GET /api/v1/pe/districts?department=CODE&province=NAME
     else if (path === '/api/v1/pe/districts') {
       const department = url.searchParams.get('department');
       const province = url.searchParams.get('province');
-      
+
       if (!department) {
         return errorResponse('MISSING_PARAMETER', "Parameter 'department' is required");
       }
-      
+
       if (!province) {
         return errorResponse('MISSING_PARAMETER', "Parameter 'province' is required");
       }
-      
+
       const deptData = districtsByDepartmentProvince[department.toUpperCase()];
-      
+
       if (!deptData) {
         return errorResponse('INVALID_DEPARTMENT', `Department '${department}' not found`, 404);
       }
-      
+
       const districts = deptData[province];
-      
+
       if (!districts) {
         return errorResponse('INVALID_PROVINCE', `Province '${province}' not found in department '${department}'`, 404);
       }
-      
+
       response = successResponse(districts);
     }
-    
+
     // GET /api/v1/pe/search?q=QUERY
     else if (path === '/api/v1/pe/search') {
       const query = url.searchParams.get('q');
-      
+
       if (!query || query.length < 2) {
         return errorResponse('INVALID_QUERY', 'Query must be at least 2 characters long');
       }
-      
+
       const results = [];
       const queryLower = query.toLowerCase();
-      
+
       // Search in provinces and districts
       for (const [deptCode, provinces] of Object.entries(UBIGEO_DATA.provincesByDepartment)) {
         for (const province of provinces) {
@@ -221,7 +251,7 @@ export default {
             results.push({ type: 'province', department: deptCode, name: province });
           }
         }
-        
+
         const deptDistricts = districtsByDepartmentProvince[deptCode];
         if (deptDistricts) {
           for (const [province, districts] of Object.entries(deptDistricts)) {
@@ -233,18 +263,18 @@ export default {
           }
         }
       }
-      
+
       response = successResponse(results.slice(0, 50)); // Limit to 50 results
     }
-    
+
     // 404 Not Found
     else {
       return errorResponse('NOT_FOUND', 'Endpoint not found', 404);
     }
-    
+
     // Cache the response
     ctx.waitUntil(cache.put(request, response.clone()));
-    
+
     return response;
   }
 };

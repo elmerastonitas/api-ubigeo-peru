@@ -30,14 +30,14 @@ GET /api/v1/pe/search?q=QUERY
 
 ```javascript
 // Obtener departamentos
-const response = await fetch('https://your-worker.workers.dev/api/v1/pe/departments');
+const response = await fetch('https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe/departments');
 const { ok, data } = await response.json();
 
 // Obtener provincias
-const provinces = await fetch('https://your-worker.workers.dev/api/v1/pe/provinces?department=AMA');
+const provinces = await fetch('https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe/provinces?department=AMA');
 
 // Obtener distritos
-const districts = await fetch('https://your-worker.workers.dev/api/v1/pe/districts?department=AMA&province=Bagua');
+const districts = await fetch('https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe/districts?department=AMA&province=Bagua');
 ```
 
 ## 📦 Despliegue

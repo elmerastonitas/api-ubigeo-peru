@@ -72,7 +72,7 @@ wrangler deploy
 ```
 ✨ Built successfully!
 ✨ Successfully published your script to
-   https://ubigeo-peru-api.your-subdomain.workers.dev
+   https://api-ubigeo-peru.elmerastonitas.workers.dev
 ```
 
 ### 5. Verificar Despliegue
@@ -80,7 +80,7 @@ wrangler deploy
 Probar el endpoint de departamentos:
 
 ```bash
-curl https://ubigeo-peru-api.your-subdomain.workers.dev/api/v1/pe/departments
+curl https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe/departments
 ```
 
 Deberías recibir una respuesta JSON con la lista de departamentos.

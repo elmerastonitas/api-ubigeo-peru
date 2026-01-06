@@ -30,7 +30,7 @@ Ejemplo completo de implementación con selects dependientes en HTML/JavaScript:
     </select>
 
     <script>
-        const API_BASE = 'https://your-worker.workers.dev/api/v1/pe';
+        const API_BASE = 'https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe';
         
         const departmentSelect = document.getElementById('department');
         const provinceSelect = document.getElementById('province');
@@ -141,7 +141,7 @@ Ejemplo completo de implementación con selects dependientes en HTML/JavaScript:
 ```php
 <?php
 function getProvinces($departmentCode) {
-    $apiUrl = "https://your-worker.workers.dev/api/v1/pe/provinces?department=" . urlencode($departmentCode);
+    $apiUrl = "https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe/provinces?department=" . urlencode($departmentCode);
     
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $apiUrl);
@@ -178,7 +178,7 @@ foreach ($provinces as $province) {
 <?php
 function getDistricts($departmentCode, $provinceName) {
     $apiUrl = sprintf(
-        "https://your-worker.workers.dev/api/v1/pe/districts?department=%s&province=%s",
+        "https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe/districts?department=%s&province=%s",
         urlencode($departmentCode),
         urlencode($provinceName)
     );
@@ -205,7 +205,7 @@ print_r($districts);
 ```php
 <?php
 function getDepartments() {
-    $apiUrl = "https://your-worker.workers.dev/api/v1/pe/departments";
+    $apiUrl = "https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe/departments";
     
     $context = stream_context_create([
         'http' => [
@@ -244,7 +244,7 @@ import requests
 
 def get_departments():
     """Obtiene la lista de departamentos"""
-    url = "https://your-worker.workers.dev/api/v1/pe/departments"
+    url = "https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe/departments"
     
     try:
         response = requests.get(url)
@@ -270,7 +270,7 @@ for dept in departments:
 import requests
 
 class UbigeoAPI:
-    def __init__(self, base_url="https://your-worker.workers.dev/api/v1/pe"):
+    def __init__(self, base_url="https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe"):
         self.base_url = base_url
     
     def get_provinces(self, department_code):
@@ -340,7 +340,7 @@ npm install node-fetch
 ```javascript
 const fetch = require('node-fetch');
 
-const API_BASE = 'https://your-worker.workers.dev/api/v1/pe';
+const API_BASE = 'https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe';
 
 async function getDepartments() {
     const response = await fetch(`${API_BASE}/departments`);
@@ -385,7 +385,7 @@ const express = require('express');
 const fetch = require('node-fetch');
 
 const app = express();
-const API_BASE = 'https://your-worker.workers.dev/api/v1/pe';
+const API_BASE = 'https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe';
 
 // Proxy endpoint para departamentos
 app.get('/api/departments', async (req, res) => {
@@ -430,7 +430,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public class UbigeoAPI {
-    private static final String API_BASE = "https://your-worker.workers.dev/api/v1/pe";
+    private static final String API_BASE = "https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe";
     private final HttpClient client;
     private final Gson gson;
     
@@ -529,6 +529,7 @@ Siempre codifica los parámetros URL, especialmente nombres de provincias con es
 
 ```javascript
 // ✅ Correcto
+const API_BASE = 'https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe';
 const url = `${API_BASE}/districts?department=AMA&province=${encodeURIComponent('Rodriguez De Mendoza')}`;
 
 // ❌ Incorrecto

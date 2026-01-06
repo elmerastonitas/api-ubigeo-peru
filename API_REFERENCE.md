@@ -3,10 +3,8 @@
 ## Base URL
 
 ```
-https://your-worker.workers.dev
+https://api-ubigeo-peru.elmerastonitas.workers.dev
 ```
-
-Reemplaza `your-worker.workers.dev` con tu dominio de Cloudflare Workers.
 
 ## Endpoints
 
@@ -35,7 +33,7 @@ GET /api/v1/pe/departments
 
 **Ejemplo:**
 ```bash
-curl https://your-worker.workers.dev/api/v1/pe/departments
+curl https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe/departments
 ```
 
 ---
@@ -66,7 +64,7 @@ GET /api/v1/pe/provinces?department={CODE}
 
 **Ejemplo:**
 ```bash
-curl "https://your-worker.workers.dev/api/v1/pe/provinces?department=AMA"
+curl "https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe/provinces?department=AMA"
 ```
 
 ---
@@ -98,7 +96,7 @@ GET /api/v1/pe/districts?department={CODE}&province={NAME}
 
 **Ejemplo:**
 ```bash
-curl "https://your-worker.workers.dev/api/v1/pe/districts?department=AMA&province=Bagua"
+curl "https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe/districts?department=AMA&province=Bagua"
 ```
 
 ---
@@ -140,7 +138,7 @@ GET /api/v1/pe/search?q={QUERY}
 
 **Ejemplo:**
 ```bash
-curl "https://your-worker.workers.dev/api/v1/pe/search?q=jesus"
+curl "https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe/search?q=jesus"
 ```
 
 ---
