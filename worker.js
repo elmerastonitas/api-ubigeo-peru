@@ -157,14 +157,22 @@ export default {
     if (path === '/') {
       response = jsonResponse({
         ok: true,
-        service: 'UBIGEO Perú API',
+        message: '¡Bienvenido a UBIGEO Perú API! 🇵🇪',
+        description: 'API REST para datos geográficos del Perú (Departamentos, Provincias, Distritos)',
         version: 'v1',
-        endpoints: [
-          '/health',
-          '/api/v1/pe/departments',
-          '/api/v1/pe/provinces?department=CAJ',
-          '/api/v1/pe/districts?department=CAJ&province=Cutervo',
-          '/api/v1/pe/search?q=bagua'
+        author: 'Elmer Astonitas',
+        documentation: 'https://github.com/elmerastonitas/api-ubigeo-peru',
+        endpoints: {
+          health: '/health',
+          departments: '/api/v1/pe/departments',
+          provinces: '/api/v1/pe/provinces?department=LIM',
+          districts: '/api/v1/pe/districts?department=LIM&province=Lima',
+          search: '/api/v1/pe/search?q=lima'
+        },
+        examples: [
+          'curl https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe/departments',
+          'curl "https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe/provinces?department=CUS"',
+          'curl "https://api-ubigeo-peru.elmerastonitas.workers.dev/api/v1/pe/search?q=cusco"'
         ]
       });
     }
@@ -173,18 +181,20 @@ export default {
     else if (path === '/health') {
       response = jsonResponse({
         ok: true,
-        status: 'healthy'
+        status: 'healthy',
+        message: 'API funcionando correctamente ✅',
+        uptime: 'Cloudflare Workers - Always On',
+        timestamp: new Date().toISOString(),
+        stats: {
+          departments: UBIGEO_DATA.departments.length,
+          provinces: Object.values(UBIGEO_DATA.provincesByDepartment).flat().length,
+          cached: true
+        }
       });
     }
 
     // GET /api/v1/pe/departments
     else if (path === '/api/v1/pe/departments') {
-      response = successResponse(UBIGEO_DATA.departments);
-    }
-
-
-    // GET /api/v1/pe/departments
-    if (path === '/api/v1/pe/departments') {
       response = successResponse(UBIGEO_DATA.departments);
     }
 
