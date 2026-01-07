@@ -1,6 +1,6 @@
 # UBIGEO Perú API
 
-REST API ligera para datos geográficos del Perú (Departamentos, Provincias, Distritos) desplegable en Cloudflare Workers.
+REST API ligera para datos geográficos del Perú (Departamentos, Provincias, Distritos).
 
 ## 🚀 Características
 
